@@ -1,5 +1,6 @@
 import requests
 from PIL import Image
+import scipy
 from transformers import BlipProcessor, BlipForConditionalGeneration, AutoProcessor, MusicgenForConditionalGeneration
 from IPython.display import Audio
 
@@ -11,14 +12,6 @@ def image_to_music(path_to_image):
 
     raw_image = Image.open(path_to_image).convert('RGB')
 
-    # conditional image captioning
-    text = "an image of"
-    inputs = img_processor(raw_image, text, return_tensors="pt")
-
-    out = img_model.generate(**inputs)
-    print(img_processor.decode(out[0], skip_special_tokens=True))
-
-    # unconditional image captioning
     inputs = img_processor(raw_image, return_tensors="pt")
 
     out = img_model.generate(**inputs)
@@ -35,11 +28,11 @@ def image_to_music(path_to_image):
 
     audio_values = audio_model.generate(**inputs, max_new_tokens=256)
     sampling_rate = audio_model.config.audio_encoder.sampling_rate
-    return Audio(audio_values[0].numpy(), rate=sampling_rate)
+    scipy.io.wavfile.write("music.wav", rate=sampling_rate, data=audio_values[0, 0].numpy())
 
 st.header("VisTune: an AI Image-to-Music generator")
 st.image('./forest.png')
 
-audio_ = st.button("Generate Music", on_click=image_to_music('./forest.png'))
-if audio_:
-    st.audio(audio_)
+if st.button("Generate Music"):
+    image_to_music('./forest.png')
+    st.audio("music.wav")
