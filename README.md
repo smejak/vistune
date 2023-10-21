@@ -1,5 +1,7 @@
 # VisTune - AI Image-to-Music Generator
 
+Demo: https://huggingface.co/spaces/smejak/vistune
+
 VisTune is an artificial intelligence (AI) application that leverages state-of-the-art machine learning models to convert images into music. The application utilizes the image captioning abilities of Salesforce's BLIP model to generate textual descriptions of images, which are then used as input for the Musicgen model from Facebook to generate music. This document provides a brief overview of how to use VisTune and the underlying technologies.
 
 ---
